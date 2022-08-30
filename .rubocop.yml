@@ -1,0 +1,2 @@
+inherit_from:
+  - .rubocop/ruby-3.1.yml
