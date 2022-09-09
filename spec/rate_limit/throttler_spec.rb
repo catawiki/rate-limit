@@ -1,15 +1,20 @@
 # frozen_string_literal: true
 
 RSpec.describe RateLimit::Throttler do
-  let(:topic_login) { 'login' }
+  let(:sym_topic) { :login }
+  let(:topic_login) { sym_topic.to_s }
   let(:namespace_user_id) { 'user_id' }
   let(:value_five) { 5 }
   let(:options) do
     {
-      topic: topic_login,
+      topic: sym_topic,
       namespace: namespace_user_id,
       value: value_five
     }
+  end
+
+  before do
+    allow(RateLimit::Config::FileLoader).to receive(:fetch).and_return({ topic_login => { 2 => 300 } })
   end
 
   describe '.new' do
@@ -116,7 +121,7 @@ RSpec.describe RateLimit::Throttler do
         end
 
         it 'error interval to equal 60' do
-          expect(error.interval).to eq(60)
+          expect(error.interval).to eq(300)
         end
       end
     end

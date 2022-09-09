@@ -8,7 +8,7 @@ module RateLimit
       @topic     = topic.to_s
       @value     = value.to_i
       @namespace = namespace&.to_s
-      @windows   = Limit.fetch(topic).map { |limit| Window.new(self, limit) }
+      @windows   = Limit.fetch(@topic).map { |limit| Window.new(self, limit) }
     end
 
     def perform!
