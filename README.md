@@ -17,7 +17,7 @@ This gem mainly provides brute-force protection by throttling attepmts for a spe
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'rate-limit'
+gem 'rate-limit', require: 'rate_limit'
 ```
 
 And then execute:
