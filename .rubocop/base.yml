@@ -20,3 +20,6 @@ RSpec/NestedGroups:
 
 RSpec/MultipleMemoizedHelpers:
   Max: 6
+
+Naming/FileName:
+  Exclude: ['lib/rate-limit.rb']
