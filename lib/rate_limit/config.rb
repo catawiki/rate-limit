@@ -9,6 +9,8 @@ module RateLimit
     attr_accessor :default_interval,
                   :default_threshold,
                   :limits_file_path,
+                  :on_success,
+                  :on_failure,
                   :fail_safe,
                   :redis
 
@@ -22,6 +24,14 @@ module RateLimit
 
     def raw_limits_for(topic)
       raw_limits[topic] || Defaults.raw_limits
+    end
+
+    def success_callback(*args)
+      on_success&.call(*args)
+    end
+
+    def failure_callback(*args)
+      on_failure&.call(*args)
     end
 
     private

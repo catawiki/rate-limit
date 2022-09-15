@@ -5,6 +5,11 @@ RSpec.shared_examples_for RateLimit::Throttler do
   let(:namespace_user_id) { 'user_id' }
   let(:value_five) { 5 }
 
+  before do
+    allow(RateLimit.config).to receive(:success_callback).with(any_args)
+    allow(RateLimit.config).to receive(:failure_callback).with(any_args)
+  end
+
   describe '#throttle_only_failures_with_block!' do
     before do
       allow(RateLimit::Window).to receive(:increment_cache_counter).with(any_args).and_call_original
@@ -43,6 +48,12 @@ RSpec.shared_examples_for RateLimit::Throttler do
 
         expect(RateLimit::Window).to have_received(:increment_cache_counter).once
       end
+
+      it 'calls config.success_callback' do
+        subject.throttle
+
+        expect(RateLimit.config).to have_received(:success_callback).with(subject.result)
+      end
     end
 
     context 'when namespace attempts exceeds limits' do
@@ -78,6 +89,12 @@ RSpec.shared_examples_for RateLimit::Throttler do
 
       it 'sets interval to equal 60' do
         expect(returned_object.interval).to eq(300)
+      end
+
+      it 'calls config.failure_callback' do
+        subject
+
+        expect(RateLimit.config).to have_received(:failure_callback).with(returned_object)
       end
     end
   end
