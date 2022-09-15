@@ -2,14 +2,14 @@
 
 module RateLimit
   class Window
-    attr_accessor :throttler, :limit
+    attr_accessor :worker, :limit
 
-    delegate :topic, :namespace, :value, to: :throttler
+    delegate :topic, :namespace, :value, to: :worker
     delegate :threshold, :interval, to: :limit
 
-    def initialize(throttler, limit)
-      @throttler = throttler
-      @limit     = limit
+    def initialize(worker, limit)
+      @worker = worker
+      @limit = limit
     end
 
     def key
@@ -21,6 +21,10 @@ module RateLimit
     end
 
     class << self
+      def find_all(topic:, worker:)
+        Limit.fetch(topic).map { |limit| Window.new(worker, limit) }
+      end
+
       def find_exceeded(windows)
         windows.find { |w| w.cached_counter >= w.threshold }
       end

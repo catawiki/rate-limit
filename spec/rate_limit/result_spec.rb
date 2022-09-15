@@ -4,7 +4,7 @@ RSpec.describe RateLimit::Result do
   let(:topic_login) { :login }
   let(:namespace_user_id) { 'user_id' }
   let(:value_five) { 5 }
-  let(:worker) { RateLimit::Throttler.new(topic: topic_login, namespace: namespace_user_id, value: value_five) }
+  let(:worker) { RateLimit::Worker.new(topic: topic_login, namespace: namespace_user_id, value: value_five) }
 
   describe '.new' do
     subject(:result) { described_class.new(worker, true) }
