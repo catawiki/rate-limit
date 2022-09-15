@@ -5,11 +5,11 @@ RSpec.shared_examples_for RateLimit::Configurable do
     subject(:config) { described_class.config }
 
     it 'returns config class' do
-      expect(config).to be_kind_of(described_class::Config)
+      expect(config).to be_a(described_class::Config)
     end
 
     it 'returns instance redis by default' do
-      expect(config.redis).to be_kind_of(Redis)
+      expect(config.redis).to be_a(Redis)
     end
   end
 
