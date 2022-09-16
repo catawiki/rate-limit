@@ -5,7 +5,7 @@ RSpec.describe RateLimit::Config do
     subject(:config) { described_class.new }
 
     it 'returns instance redis by default' do
-      expect(config.redis).to be_kind_of(Redis)
+      expect(config.redis).to be_a(Redis)
     end
 
     it 'returns fail_safe' do
