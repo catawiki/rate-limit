@@ -2,7 +2,7 @@
 
 module RateLimit
   class Throttler
-    attr_accessor :topic, :namespace, :value, :limits, :windows
+    attr_accessor :topic, :namespace, :value, :limits, :windows, :exceeded_window
 
     def initialize(topic:, value:, namespace: nil)
       @topic     = topic.to_s
@@ -49,7 +49,7 @@ module RateLimit
     private
 
     def validate_limit!
-      exceeded_window = Window.find_exceeded(windows)
+      @exceeded_window = Window.find_exceeded(windows)
 
       raise Errors::LimitExceededError, exceeded_window if exceeded_window
     end

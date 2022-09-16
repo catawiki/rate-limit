@@ -2,6 +2,7 @@
 
 require 'active_support/core_ext/module'
 require_relative 'rate_limit/configurable'
+require_relative 'rate_limit/result'
 require_relative 'rate_limit/cache'
 require_relative 'rate_limit/window'
 require_relative 'rate_limit/throttler'
