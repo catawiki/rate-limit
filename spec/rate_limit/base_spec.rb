@@ -147,6 +147,62 @@ RSpec.shared_examples_for RateLimit::Base do
         end
       end
     end
+
+    context 'when nested throttles are called' do
+      subject(:nested_throttle!) do
+        described_class.throttle_with_block!(**options) do
+          described_class.throttle_with_block!(topic: topic_login, namespace: :phone_number, value: '0000000099') do
+            Hash.new(1)
+          end
+        end
+      end
+
+      before { allow(Hash).to receive(:new) }
+
+      context 'when attempts did not exceed limits' do
+        it 'calls yield' do
+          nested_throttle!
+
+          expect(Hash).to have_received(:new).once
+        end
+      end
+
+      context 'when attempts exceeded limits' do
+        before do
+          2.times do
+            described_class.throttle_with_block!(**options) do
+              described_class.throttle_with_block!(topic: topic_login, namespace: :phone_number, value: '0000000099') do
+                []
+              end
+            end
+          end
+        end
+
+        it 'raises Limit Exceeded Error' do
+          expect do
+            nested_throttle!
+          end.to raise_error(RateLimit::Errors::LimitExceededError)
+        end
+
+        it 'does not call Hash.new' do
+          suppress(RateLimit::Errors::LimitExceededError) do
+            nested_throttle!
+          end
+
+          expect(Hash).not_to have_received(:new).with(any_args)
+        end
+
+        it 'exceeded limit for atribute 1' do
+          expect(described_class.limit_exceeded?(**options)).to be(true)
+        end
+
+        it 'exceeded limit for atribute 2' do
+          expect(
+            described_class.limit_exceeded?(topic: topic_login, namespace: :phone_number, value: '0000000099')
+          ).to be(true)
+        end
+      end
+    end
   end
 
   describe '.throttle_only_failures_with_block!' do
