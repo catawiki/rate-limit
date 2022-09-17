@@ -14,7 +14,7 @@ RSpec.describe RateLimit::Throttler do
   end
 
   before do
-    allow(RateLimit::Config::FileLoader).to receive(:fetch).and_return({ topic_login => { 2 => 300 } })
+    allow(RateLimit.config).to receive(:raw_limits).and_return({ topic_login => { 2 => 300 } })
   end
 
   describe '.new' do
