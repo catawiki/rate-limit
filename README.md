@@ -117,6 +117,14 @@ RateLimit.configure do |config|
   config.default_interval  = 60
   config.default_threshold = 2
   config.limits_file_path  = 'config/rate-limit.yml'
+  config.on_success = proc { |result|
+    # Success Logic Goes HERE
+    # result.topic, result.namespace, result.value
+  }
+  config.on_failure = proc { |result|
+    # Failure Logic Goes HERE
+    # result.topic, result.namespace, result.value,  result.threshold,  result.interval
+  }
 end
 ```
 

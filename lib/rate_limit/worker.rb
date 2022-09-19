@@ -34,10 +34,12 @@ module RateLimit
     def success!
       increment_cache_counter
       @result = Result.new(self, true)
+      RateLimit.config.success_callback(result)
     end
 
     def failure!
       @result = Result.new(self, false)
+      RateLimit.config.failure_callback(result)
     end
   end
 end
