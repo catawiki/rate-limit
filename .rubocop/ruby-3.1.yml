@@ -6,3 +6,6 @@ AllCops:
 
 Gemspec/RequiredRubyVersion:
   Enabled: false
+
+Naming/BlockForwarding:
+  Enabled: false

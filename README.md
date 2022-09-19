@@ -33,14 +33,18 @@ Or install it yourself as:
 #### Basic `RateLimit.throttle`
 
 ```ruby
-if RateLimit.throttle(topic: :login, namespace: :user_id, value: id)
+result = RateLimit.throttle(topic: :login, namespace: :user_id, value: id)
+
+if result.success?
   # Do something
 end
 ```
 or
 
 ```ruby
-if RateLimit.throttle(topic: :login, value: id)
+result = RateLimit.throttle(topic: :login, namespace: :user_id, value: id)
+
+if result.success?
   # Do something
 end
 ```
@@ -49,7 +53,7 @@ end
 
 ```ruby
 begin
-  RateLimit.throttle!(topic: :send_sms, namespace: :user_id, value: id) do
+  RateLimit.throttle_with_block!(topic: :send_sms, namespace: :user_id, value: id) do
     # Logic goes Here
   end
 rescue RateLimit::Errors::LimitExceededError => e
@@ -65,10 +69,10 @@ end
 #### Advanced
 
 ```ruby
-throttler = RateLimit::Throttler.new(topic: :login, namespace: :user_id, value: id)
+throttler = RateLimit::Worker.new(topic: :login, namespace: :user_id, value: id)
 
 begin
-  throttler.perform! do
+  throttler.throttle_with_block! do
     # Logic goes Here
   end
 rescue RateLimit::Errors::LimitExceededError => e
@@ -79,7 +83,7 @@ end
 #### Manual
 
 ```ruby
-throttler = RateLimit::Throttler.new(topic: :login, namespace: :user_id, value: id)
+throttler = RateLimit::Worker.new(topic: :login, namespace: :user_id, value: id)
 
 unless throttler.limit_exceeded?
   # Logic goes Here
@@ -92,8 +96,8 @@ end
 
 ```ruby
 begin
-  RateLimit.throttle!(topic: :send_sms, namespace: :user_id, value: id) do
-    RateLimit.throttle!(topic: :send_sms, namespace: :phone_number, value: number) do
+  RateLimit.throttle_with_block!(topic: :send_sms, namespace: :user_id, value: id) do
+    RateLimit.throttle_with_block!(topic: :send_sms, namespace: :phone_number, value: number) do
       # Logic goes Here
     end
   end

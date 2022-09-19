@@ -3,29 +3,35 @@
 module RateLimit
   module Base
     def throttle(**args)
-      throttle!(**args) { yield if block_given? }
-    rescue Errors::LimitExceededError => _e
-      false
+      worker = Worker.new(**args)
+      worker.throttle
+      worker.result
     end
 
-    def throttle!(**args)
-      Throttler.new(**args).perform! { yield if block_given? }
+    def throttle_with_block!(**args, &block)
+      worker = Worker.new(**args)
+
+      worker.throttle_with_block!(&block)
+      worker.result
     end
 
-    def throttle_only_failures!(**args)
-      Throttler.new(**args).perform_only_failures! { yield if block_given? }
+    def throttle_only_failures_with_block!(**args, &block)
+      worker = Worker.new(**args)
+
+      worker.throttle_only_failures_with_block!(&block)
+      worker.result
     end
 
     def limit_exceeded?(**args)
-      Throttler.new(**args).limit_exceeded?
+      Worker.new(**args).reloaded_limit_exceeded?
     end
 
     def reset_counters(**args)
-      Throttler.new(**args).clear_cache_counter
+      Worker.new(**args).clear_cache_counter
     end
 
     def increment_counters(**args)
-      Throttler.new(**args).increment_cache_counter
+      Worker.new(**args).increment_cache_counter
     end
   end
 end
