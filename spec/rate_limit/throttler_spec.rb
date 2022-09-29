@@ -2,7 +2,6 @@
 
 RSpec.shared_examples_for RateLimit::Throttler do
   let(:topic_login) { :login }
-  let(:namespace_user_id) { 'user_id' }
   let(:value_five) { 5 }
 
   before do
@@ -42,7 +41,7 @@ RSpec.shared_examples_for RateLimit::Throttler do
       allow(RateLimit::Window).to receive(:increment_cache_counter).with(any_args).and_call_original
     end
 
-    context 'when namespace attempts did not exceed limits' do
+    context 'when topic attempts did not exceed limits' do
       it 'increments limit in cache when block is not given' do
         subject.throttle
 
@@ -56,7 +55,7 @@ RSpec.shared_examples_for RateLimit::Throttler do
       end
     end
 
-    context 'when namespace attempts exceeds limits' do
+    context 'when topic attempts exceeds limits' do
       before do
         3.times { subject.throttle }
       end
@@ -73,10 +72,6 @@ RSpec.shared_examples_for RateLimit::Throttler do
 
       it 'sets topic to equal login' do
         expect(returned_object.topic).to eq(topic_login.to_s)
-      end
-
-      it 'sets namespace to equal user_id' do
-        expect(returned_object.namespace).to eq(namespace_user_id)
       end
 
       it 'sets value to equal 5' do

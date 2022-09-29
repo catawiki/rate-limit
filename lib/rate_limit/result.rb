@@ -3,12 +3,11 @@
 module RateLimit
   class Result
     # Attributes
-    attr_accessor :topic, :namespace, :value, :threshold, :interval
+    attr_accessor :topic, :value, :threshold, :interval
 
     # Methods
     def initialize(worker, success)
       @topic      = worker.topic
-      @namespace  = worker.namespace
       @value      = worker.value
       @threshold  = worker.exceeded_window&.threshold
       @interval   = worker.exceeded_window&.interval

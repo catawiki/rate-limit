@@ -4,7 +4,7 @@ module RateLimit
   class Window
     attr_accessor :worker, :limit
 
-    delegate :topic, :namespace, :value, to: :worker
+    delegate :topic, :value, to: :worker
     delegate :threshold, :interval, to: :limit
 
     def initialize(worker, limit)
@@ -13,7 +13,7 @@ module RateLimit
     end
 
     def key
-      @key ||= [topic, namespace, value, interval].join(':')
+      @key ||= [topic, value, interval].join(':')
     end
 
     def cached_counter

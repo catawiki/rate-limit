@@ -5,7 +5,7 @@ module RateLimit
     class LimitExceededError < StandardError
       attr_reader :window
 
-      delegate :topic, :namespace, :value, :threshold, :interval, to: :window
+      delegate :topic, :value, :threshold, :interval, to: :window
 
       def initialize(window)
         @window = window
@@ -14,7 +14,7 @@ module RateLimit
       end
 
       def custom_message
-        "#{topic}: #{namespace} has exceeded #{threshold} in #{interval} seconds"
+        "#{topic}: has exceeded #{threshold} in #{interval} seconds"
       end
     end
   end
