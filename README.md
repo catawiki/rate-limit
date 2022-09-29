@@ -33,7 +33,7 @@ Or install it yourself as:
 #### Basic `RateLimit.throttle`
 
 ```ruby
-result = RateLimit.throttle(topic: :login, namespace: :user_id, value: id)
+result = RateLimit.throttle(topic: :login, value: id)
 
 if result.success?
   # Do something
@@ -44,13 +44,12 @@ end
 
 ```ruby
 begin
-  RateLimit.throttle_with_block!(topic: :send_sms, namespace: :user_id, value: id) do
+  RateLimit.throttle_with_block!(topic: :send_sms, value: id) do
     # Logic goes Here
   end
 rescue RateLimit::Errors::LimitExceededError => e
   # Error Handling Logic goes here
   e.topic     # :login
-  e.namespace # :user_id
   e.value     # id
   e.threshold # 2
   e.interval  # 60
@@ -60,7 +59,7 @@ end
 #### Advanced
 
 ```ruby
-worker = RateLimit::Worker.new(topic: :login, namespace: :user_id, value: id)
+worker = RateLimit::Worker.new(topic: :login, value: id)
 
 begin
   worker.throttle_with_block! do
@@ -74,7 +73,7 @@ end
 #### Manual
 
 ```ruby
-worker = RateLimit::Worker.new(topic: :login, namespace: :user_id, value: id)
+worker = RateLimit::Worker.new(topic: :login, value: id)
 
 unless worker.limit_exceeded?
   # Logic goes Here
@@ -87,8 +86,8 @@ end
 
 ```ruby
 begin
-  RateLimit.throttle_with_block!(topic: :send_sms, namespace: :user_id, value: id) do
-    RateLimit.throttle_with_block!(topic: :send_sms, namespace: :phone_number, value: number) do
+  RateLimit.throttle_with_block!(topic: :send_sms_by_id, value: id) do
+    RateLimit.throttle_with_block!(topic: :send_sms_by_phone, value: number) do
       # Logic goes Here
     end
   end
@@ -110,11 +109,11 @@ RateLimit.configure do |config|
   config.limits_file_path  = 'config/rate-limit.yml'
   config.on_success = proc { |result|
     # Success Logic Goes HERE
-    # result.topic, result.namespace, result.value
+    # result.topic, result.value
   }
   config.on_failure = proc { |result|
     # Failure Logic Goes HERE
-    # result.topic, result.namespace, result.value,  result.threshold,  result.interval
+    # result.topic, result.value,  result.threshold,  result.interval
   }
 end
 ```

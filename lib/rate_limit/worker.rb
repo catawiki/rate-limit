@@ -4,12 +4,11 @@ module RateLimit
   class Worker
     include Throttler
 
-    attr_accessor :topic, :namespace, :value, :limits, :windows, :exceeded_window, :result
+    attr_accessor :topic, :value, :limits, :windows, :exceeded_window, :result
 
-    def initialize(topic:, value:, namespace: nil)
+    def initialize(topic:, value:)
       @topic     = topic.to_s
       @value     = value.to_i
-      @namespace = namespace&.to_s
       @windows   = Window.find_all(worker: self, topic: @topic)
     end
 
