@@ -39,17 +39,8 @@ if result.success?
   # Do something
 end
 ```
-or
 
-```ruby
-result = RateLimit.throttle(topic: :login, namespace: :user_id, value: id)
-
-if result.success?
-  # Do something
-end
-```
-
-#### Basic with exception `RateLimit.throttle!`
+#### Basic with exception `RateLimit.throttle_with_block!`
 
 ```ruby
 begin
@@ -69,10 +60,10 @@ end
 #### Advanced
 
 ```ruby
-throttler = RateLimit::Worker.new(topic: :login, namespace: :user_id, value: id)
+worker = RateLimit::Worker.new(topic: :login, namespace: :user_id, value: id)
 
 begin
-  throttler.throttle_with_block! do
+  worker.throttle_with_block! do
     # Logic goes Here
   end
 rescue RateLimit::Errors::LimitExceededError => e
@@ -83,12 +74,12 @@ end
 #### Manual
 
 ```ruby
-throttler = RateLimit::Worker.new(topic: :login, namespace: :user_id, value: id)
+worker = RateLimit::Worker.new(topic: :login, namespace: :user_id, value: id)
 
-unless throttler.limit_exceeded?
+unless worker.limit_exceeded?
   # Logic goes Here
 
-  throttler.increment_counters
+  worker.increment_counters
 end
 ```
 
