@@ -10,6 +10,7 @@ module RateLimit
       @topic     = topic.to_s
       @value     = value.to_i
       @windows   = Window.find_all(worker: self, topic: @topic)
+      @result    = Result.new(topic: @topic, value: @value)
     end
 
     def increment_cache_counter
@@ -32,13 +33,11 @@ module RateLimit
 
     def success!
       increment_cache_counter
-      @result = Result.new(self, true)
-      RateLimit.config.success_callback(result)
+      result.success!
     end
 
-    def failure!
-      @result = Result.new(self, false)
-      RateLimit.config.failure_callback(result)
+    def failure!(fail_safe: true)
+      result.failure!(self, fail_safe)
     end
   end
 end

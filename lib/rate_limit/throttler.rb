@@ -9,10 +9,7 @@ module RateLimit
     end
 
     def throttle_with_block!
-      if reloaded_limit_exceeded?
-        failure!
-        raise Errors::LimitExceededError, exceeded_window
-      end
+      failure!(fail_safe: false) if reloaded_limit_exceeded?
 
       yield
 
