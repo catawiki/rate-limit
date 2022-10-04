@@ -28,9 +28,10 @@ Or install it yourself as:
 
     $ gem install rate-limit
 
-## Usage
+## Basic Usage
 
-#### Basic `RateLimit.throttle`
+### `RateLimit.throttle`
+Returns [RateLimit::Result](https://github.com/catawiki/rate-limit/wiki/RateLimit::Result) Object
 
 ```ruby
 result = RateLimit.throttle(topic: :login, value: id)
@@ -40,68 +41,19 @@ if result.success?
 end
 ```
 
-#### Basic `RateLimit.throttle` with Block
+### `RateLimit.throttle` with Block
 
+Raises error [RateLimit::Errors::LimitExceededError](https://github.com/catawiki/rate-limit/wiki/RateLimit::Errors::LimitExceededError) when limit is exceeded if `raise_errors: true` option is provided
 ```ruby
   RateLimit.throttle(topic: :send_sms, value: id, raise_errors: true) do
     # Logic goes Here
   end
 ```
 
+## Advanced Usage
+Please check the [Wiki](https://github.com/catawiki/rate-limit/wiki)
 
-#### `RateLimit.throttle` with Block (raise_errors: true)
-Raises error `RateLimit::Errors::LimitExceededError` when limit is exceeded
-
-```ruby
-begin
-  RateLimit.throttle(topic: :send_sms, value: id, raise_errors: true) do
-    # Logic goes Here
-  end
-rescue RateLimit::Errors::LimitExceededError => e
-  # Error Handling Logic goes here
-  e.result           # Result Object
-  e.result.topic     # 'send_sms'
-  e.result.value     # id
-  e.result.threshold # 2
-  e.result.interval  # 60
-end
-```
-
-#### `RateLimit.throttle` with Block (only_failures: true)
-
-Increments the cache only when an exception is raised by the given block.
-
-```ruby
-begin
-  RateLimit.throttle(topic: :login, value: id, only_failures: true) do
-    if user_password_is_correct?
-      login(user)
-    else
-      raise CustomError
-    end
-  end
-rescue CustomError => e
-  # Error Handling Logic goes here
-end
-```
-
-#### Nested throttles
-
-```ruby
-begin
-  RateLimit.throttle(topic: :send_sms_by_id, value: id, raise_errors: true) do
-    RateLimit.throttle(topic: :send_sms_by_phone, value: number, raise_errors: true) do
-      # Logic goes Here
-    end
-  end
-rescue RateLimit::Errors::LimitExceededError => e
-  # Error Handling Logic goes here
-end
-```
-
-
-
-### Config
+## Config
 
 Customize the configuration by adding the following block to `config/initializers/rate_limit.rb`
 
