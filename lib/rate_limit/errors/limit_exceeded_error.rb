@@ -5,6 +5,8 @@ module RateLimit
     class LimitExceededError < StandardError
       attr_reader :result
 
+      delegate :topic, :value, :threshold, :interval, to: :result
+
       def initialize(result)
         @result = result
 
