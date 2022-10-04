@@ -40,45 +40,20 @@ if result.success?
 end
 ```
 
-#### Basic with exception `RateLimit.throttle_with_block!`
+#### Basic `RateLimit.throttle` with Block
 
 ```ruby
 begin
-  RateLimit.throttle_with_block!(topic: :send_sms, value: id) do
+  RateLimit.throttle(topic: :send_sms, value: id, raise_errors: true) do
     # Logic goes Here
   end
 rescue RateLimit::Errors::LimitExceededError => e
   # Error Handling Logic goes here
-  e.topic     # :login
-  e.value     # id
-  e.threshold # 2
-  e.interval  # 60
-end
-```
-
-#### Advanced
-
-```ruby
-worker = RateLimit::Worker.new(topic: :login, value: id)
-
-begin
-  worker.throttle_with_block! do
-    # Logic goes Here
-  end
-rescue RateLimit::Errors::LimitExceededError => e
-  # Error Handling Logic goes here
-end
-```
-
-#### Manual
-
-```ruby
-worker = RateLimit::Worker.new(topic: :login, value: id)
-
-unless worker.limit_exceeded?
-  # Logic goes Here
-
-  worker.increment_counters
+  e.result           # Result Object
+  e.result.topic     # :login
+  e.result.value     # id
+  e.result.threshold # 2
+  e.result.interval  # 60
 end
 ```
 
@@ -86,8 +61,8 @@ end
 
 ```ruby
 begin
-  RateLimit.throttle_with_block!(topic: :send_sms_by_id, value: id) do
-    RateLimit.throttle_with_block!(topic: :send_sms_by_phone, value: number) do
+  RateLimit.throttle(topic: :send_sms_by_id, value: id, raise_errors: true) do
+    RateLimit.throttle(topic: :send_sms_by_phone, value: number, raise_errors: true) do
       # Logic goes Here
     end
   end
@@ -95,6 +70,8 @@ rescue RateLimit::Errors::LimitExceededError => e
   # Error Handling Logic goes here
 end
 ```
+
+
 
 ### Config
 
