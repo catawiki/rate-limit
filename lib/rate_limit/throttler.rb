@@ -5,26 +5,16 @@ module RateLimit
     def throttle
       return failure! if reloaded_limit_exceeded?
 
-      success!
-    end
+      unless only_failures
+        yield if block_given?
 
-    def throttle_with_block!
-      failure!(raise_errors: true) if reloaded_limit_exceeded?
-
-      yield
-
-      success!
-    end
-
-    def throttle_only_failures_with_block!
-      return failure! if reloaded_limit_exceeded?
-
-      begin
-        yield
-      rescue StandardError => e
-        success!
-        raise e
+        return success!
       end
+
+      yield if block_given?
+    rescue StandardError => e
+      success!
+      raise e
     end
   end
 end

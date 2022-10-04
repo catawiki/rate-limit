@@ -14,15 +14,17 @@ RSpec.shared_examples_for RateLimit::Throttler do
       allow(RateLimit::Window).to receive(:increment_cache_counter).with(any_args).and_call_original
     end
 
+    let(:only_failures) { true }
+
     it 'increments limit in cache when block is given' do
-      subject.throttle_only_failures_with_block! { 1 + 1 }
+      subject.throttle { 1 + 1 }
 
       expect(RateLimit::Window).not_to have_received(:increment_cache_counter)
     end
 
     it 'increments limit in cache when block is given with exception' do
       suppress(StandardError) do
-        subject.throttle_only_failures_with_block! { raise 'Error' }
+        subject.throttle { raise 'Error' }
       end
 
       expect(RateLimit::Window).to have_received(:increment_cache_counter).once
@@ -30,7 +32,7 @@ RSpec.shared_examples_for RateLimit::Throttler do
 
     it 'raises error when block is given with exception' do
       expect do
-        subject.throttle_only_failures_with_block { raise 'Error' }
+        subject.throttle { raise 'Error' }
       end.to raise_error(StandardError)
     end
   end

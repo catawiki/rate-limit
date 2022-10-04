@@ -4,21 +4,7 @@ module RateLimit
   module Base
     def throttle(**args)
       worker = Worker.new(**args)
-      worker.throttle
-      worker.result
-    end
-
-    def throttle_with_block!(**args, &block)
-      worker = Worker.new(**args)
-
-      worker.throttle_with_block!(&block)
-      worker.result
-    end
-
-    def throttle_only_failures_with_block!(**args, &block)
-      worker = Worker.new(**args)
-
-      worker.throttle_only_failures_with_block!(&block)
+      worker.throttle { yield if block_given? }
       worker.result
     end
 
