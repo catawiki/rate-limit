@@ -17,16 +17,12 @@ module RateLimit
 
     def success!
       @success = true
-      RateLimit.config.success_callback(self)
     end
 
-    def failure!(worker, fail_safe)
+    def failure!(worker)
       @success = false
       @threshold  = worker.exceeded_window&.threshold
       @interval   = worker.exceeded_window&.interval
-      RateLimit.config.failure_callback(self)
-
-      raise Errors::LimitExceededError, self unless fail_safe
     end
   end
 end

@@ -34,10 +34,14 @@ module RateLimit
     def success!
       increment_cache_counter
       result.success!
+      RateLimit.config.success_callback(result)
     end
 
     def failure!(fail_safe: true)
-      result.failure!(self, fail_safe)
+      result.failure!(self)
+      RateLimit.config.failure_callback(result)
+
+      raise Errors::LimitExceededError, result unless fail_safe
     end
   end
 end
