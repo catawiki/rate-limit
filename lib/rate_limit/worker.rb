@@ -37,11 +37,11 @@ module RateLimit
       RateLimit.config.success_callback(result)
     end
 
-    def failure!(fail_safe: true)
+    def failure!(raise_errors: false)
       result.failure!(self)
       RateLimit.config.failure_callback(result)
 
-      raise Errors::LimitExceededError, result unless fail_safe
+      raise Errors::LimitExceededError, result if raise_errors
     end
   end
 end
