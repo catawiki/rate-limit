@@ -3,12 +3,12 @@
 
 Protect your Ruby apps from bad actors. RateLimit allows you to set permissions as to whether certain number of feature calls are valid or not for a specific entity (user, phone number, email address, etc...). 
 
-This gem mainly provides brute-force protection by throttling attepmts for a specific entity id (i.e user_id). However it could also be used to throttle based on ip address (we recommend that you consider using [Rack::Attack](https://github.com/rack/rack-attack) for more optimized ip throttling)
+This gem mainly provides brute-force protection by throttling attempts for a specific entity id (i.e user_id). However it could also be used to throttle based on ip address (we recommend that you consider using [Rack::Attack](https://github.com/rack/rack-attack) for more optimized ip throttling)
 
 #### Common Use Cases
 * [Login] Brute-force attempts for a spefic account
-* [SMS Spam] Brute-force attempts for requesting Phone Verification SMS for a spefic user_id
-* [SMS Spam] Brute-force attempts for requesting  Phone Verification SMS for a spefic phone_number
+* [SMS Spam] Brute-force attempts for requesting Phone Verification SMS for a specific user_id
+* [SMS Spam] Brute-force attempts for requesting  Phone Verification SMS for a specific phone_number
 * [Verifications] Brute-force attempts for entering verification codes
 * [Redeem] Brute-force attempts to redeem voucher codes from a specific account
 
