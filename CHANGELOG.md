@@ -7,14 +7,43 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
-## [v0.1.0] - 2022-09-16
+## [v0.2.0] - 2022-10-05
+
+### Added
+
+- added `RateLimit::Errors::LimitExceededError#result`
+- added `Worker#raise_errors`
+- added `Worker#only_failures`
+
+### Changed
+
+- changed `RateLimit::Result.initialize`
+
+### Removed
+
+- removed `RateLimit::Result#namespace`
+- removed `RateLimit::Worker#namespace`
+- removed `RateLimit::Errors::LimitExceededError#namespace`
+- removed `RateLimit::Errors::LimitExceededError#worker`
+
+### Deprecated
+
+- `RateLimit.throttle_with_block!` and `Worker#throttle_with_block!` in favour of `.throttle` with `{ raise_errors: true }` option
+- `RateLimit.throttle_only_failures_with_block!` and `Worker#throttle_only_failures_with_block!` in favour of `.throttle` with `{ only_failures: true }` option
+
+
+### Fixed
+
+- https://github.com/catawiki/rate-limit/issues/16 String Values are not respected
+
+## [v0.1.0] - 2022-09-19
 
 
 ### Added
 
-- [https://github.com/catawiki/rate-limit/pull/11] `RateLimit::Result` class
-- [https://github.com/catawiki/rate-limit/pull/12] `RateLimit::Worker` class
-- [https://github.com/catawiki/rate-limit/pull/13] `RateLimit::Config#on_success` and `RateLimit::Config#on_failure`
+- https://github.com/catawiki/rate-limit/pull/11 `RateLimit::Result` class
+- https://github.com/catawiki/rate-limit/pull/12 `RateLimit::Worker` class
+- https://github.com/catawiki/rate-limit/pull/13 `RateLimit::Config#on_success` and `RateLimit::Config#on_failure`
 
 ### Changed
 
@@ -26,8 +55,8 @@ and this project adheres to [Semantic Versioning].
 
 ### Fixed
 
-- [https://github.com/catawiki/rate-limit/issues/7] Symbol topic names does not load the correct limits
-- [https://github.com/catawiki/rate-limit/issues/6] Main Module (RateLimit) fails to autoload
+- https://github.com/catawiki/rate-limit/issues/7 Symbol topic names does not load the correct limits
+- https://github.com/catawiki/rate-limit/issues/6 Main Module (RateLimit) fails to autoload
 
 
 ## v0.0.1 - 2022-09-09
@@ -40,4 +69,5 @@ and this project adheres to [Semantic Versioning].
 <!-- versions -->
 
 [Unreleased]: https://github.com/catawiki/rate-limit/compare/v0.1.0...HEAD
+[v0.2.0]: https://github.com/catawiki/rate-limit/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/catawiki/rate-limit/compare/v0.0.1...v0.1.0
