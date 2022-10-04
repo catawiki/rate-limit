@@ -8,7 +8,7 @@ RSpec.describe RateLimit::Worker do
 
   describe '.new' do
     it { expect(worker.topic).to eq(topic_login.to_s) }
-    it { expect(worker.value).to eq(value_five) }
+    it { expect(worker.value).to eq(value_five.to_s) }
   end
 
   it_behaves_like RateLimit::Throttler

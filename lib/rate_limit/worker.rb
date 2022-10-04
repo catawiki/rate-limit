@@ -8,7 +8,7 @@ module RateLimit
 
     def initialize(topic:, value:)
       @topic     = topic.to_s
-      @value     = value.to_i
+      @value     = value.to_s
       @windows   = Window.find_all(worker: self, topic: @topic)
       @result    = Result.new(topic: @topic, value: @value)
     end

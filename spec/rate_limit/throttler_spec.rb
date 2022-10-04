@@ -75,7 +75,7 @@ RSpec.shared_examples_for RateLimit::Throttler do
       end
 
       it 'sets value to equal 5' do
-        expect(returned_object.value).to eq(value_five)
+        expect(returned_object.value).to eq(value_five.to_s)
       end
 
       it 'sets threshold to equal 2' do
