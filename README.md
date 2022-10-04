@@ -43,6 +43,16 @@ end
 #### Basic `RateLimit.throttle` with Block
 
 ```ruby
+  RateLimit.throttle(topic: :send_sms, value: id, raise_errors: true) do
+    # Logic goes Here
+  end
+```
+
+
+#### `RateLimit.throttle` with Block (raise_errors: true)
+Raises error `RateLimit::Errors::LimitExceededError` when limit is exceeded
+
+```ruby
 begin
   RateLimit.throttle(topic: :send_sms, value: id, raise_errors: true) do
     # Logic goes Here
@@ -50,10 +60,28 @@ begin
 rescue RateLimit::Errors::LimitExceededError => e
   # Error Handling Logic goes here
   e.result           # Result Object
-  e.result.topic     # :login
+  e.result.topic     # 'send_sms'
   e.result.value     # id
   e.result.threshold # 2
   e.result.interval  # 60
+end
+```
+
+#### `RateLimit.throttle` with Block (only_failures: true)
+
+Increments the cache only when an exception is raised by the given block.
+
+```ruby
+begin
+  RateLimit.throttle(topic: :login, value: id, only_failures: true) do
+    if user_password_is_correct?
+      login(user)
+    else
+      raise CustomError
+    end
+  end
+rescue CustomError => e
+  # Error Handling Logic goes here
 end
 ```
 
