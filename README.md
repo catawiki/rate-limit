@@ -3,12 +3,12 @@
 
 Protect your Ruby apps from bad actors. RateLimit allows you to set permissions as to whether certain number of feature calls are valid or not for a specific entity (user, phone number, email address, etc...). 
 
-This gem mainly provides brute-force protection by throttling attepmts for a specific entity id (i.e user_id). However it could also be used to throttle based on ip address (we recommend that you consider using [Rack::Attack](https://github.com/rack/rack-attack) for more optimized ip throttling)
+This gem mainly provides brute-force protection by throttling attempts for a specific entity id (i.e user_id). However it could also be used to throttle based on ip address (we recommend that you consider using [Rack::Attack](https://github.com/rack/rack-attack) for more optimized ip throttling)
 
 #### Common Use Cases
 * [Login] Brute-force attempts for a spefic account
-* [SMS Spam] Brute-force attempts for requesting Phone Verification SMS for a spefic user_id
-* [SMS Spam] Brute-force attempts for requesting  Phone Verification SMS for a spefic phone_number
+* [SMS Spam] Brute-force attempts for requesting Phone Verification SMS for a specific user_id
+* [SMS Spam] Brute-force attempts for requesting  Phone Verification SMS for a specific phone_number
 * [Verifications] Brute-force attempts for entering verification codes
 * [Redeem] Brute-force attempts to redeem voucher codes from a specific account
 
@@ -28,75 +28,32 @@ Or install it yourself as:
 
     $ gem install rate-limit
 
-## Usage
+## Basic Usage
 
-#### Basic `RateLimit.throttle`
+### [`RateLimit.throttle`](https://github.com/catawiki/rate-limit/wiki/Throttling)
+The throttle method expects the following options
 
+| Option           | Description                                                                     | Examples                              |
+| ---------------- | ------------------------------------------------------------------------------- | ------------------------------------- |
+| topic            | The topic you would like to throttle                                            | "login", "send_sms", "redeem_voucher" |
+| value            | The identifier of the unique entity that is throttled based on the topic limits | user_id, phone_number, voucher_code   |
+
+
+The `throttle` method checks if the given value did exceed the defined limits for the given topic. If the limit is exceeded then it returns [RateLimit::Result](https://github.com/catawiki/rate-limit/wiki/RateLimit::Result) Object, where `result.success?` will be `false`. Otherwise, it increments the attempts counter in the cache and sets `result.success?` to `true`.
+
+#### Example
 ```ruby
-result = RateLimit.throttle(topic: :login, value: id)
+result = RateLimit.throttle(topic: :login, value: 123)
 
 if result.success?
   # Do something
 end
 ```
 
-#### Basic with exception `RateLimit.throttle_with_block!`
 
-```ruby
-begin
-  RateLimit.throttle_with_block!(topic: :send_sms, value: id) do
-    # Logic goes Here
-  end
-rescue RateLimit::Errors::LimitExceededError => e
-  # Error Handling Logic goes here
-  e.topic     # :login
-  e.value     # id
-  e.threshold # 2
-  e.interval  # 60
-end
-```
+Please check the [Wiki](https://github.com/catawiki/rate-limit/wiki) for advanced throttling and options.
 
-#### Advanced
-
-```ruby
-worker = RateLimit::Worker.new(topic: :login, value: id)
-
-begin
-  worker.throttle_with_block! do
-    # Logic goes Here
-  end
-rescue RateLimit::Errors::LimitExceededError => e
-  # Error Handling Logic goes here
-end
-```
-
-#### Manual
-
-```ruby
-worker = RateLimit::Worker.new(topic: :login, value: id)
-
-unless worker.limit_exceeded?
-  # Logic goes Here
-
-  worker.increment_counters
-end
-```
-
-#### Nested throttles
-
-```ruby
-begin
-  RateLimit.throttle_with_block!(topic: :send_sms_by_id, value: id) do
-    RateLimit.throttle_with_block!(topic: :send_sms_by_phone, value: number) do
-      # Logic goes Here
-    end
-  end
-rescue RateLimit::Errors::LimitExceededError => e
-  # Error Handling Logic goes here
-end
-```
-
-### Config
+## [Configuration](https://github.com/catawiki/rate-limit/wiki/Configuration)
 
 Customize the configuration by adding the following block to `config/initializers/rate_limit.rb`
 
