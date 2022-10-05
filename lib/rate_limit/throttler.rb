@@ -8,10 +8,8 @@ module RateLimit
       yield if block_given?
 
       return success! unless only_failures
-    rescue Errors::LimitExceededError => e
-      raise e
     rescue StandardError => e
-      success!
+      success! unless e.is_a?(Errors::LimitExceededError)
       raise e
     end
   end
