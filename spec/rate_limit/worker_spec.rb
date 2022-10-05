@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe RateLimit::Worker do
-  subject(:worker) { described_class.new(topic: topic_login, value: value_five) }
+  subject(:worker) { described_class.new(topic: topic_login, value: value_five, only_failures: only_failures) }
 
   let(:topic_login) { :login }
   let(:value_five) { 5 }
+  let(:only_failures) { false }
 
   describe '.new' do
     it { expect(worker.topic).to eq(topic_login.to_s) }

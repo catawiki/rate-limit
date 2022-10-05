@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples_for RateLimit::Base do
-  let(:redis_instance) { RateLimit.config.redis = Redis.new }
   let(:topic_login) { 'login' }
   let(:value_five) { 5 }
-  let(:options) { { topic: topic_login, value: value_five } }
+  let(:raise_errors) { false }
 
   shared_examples_for 'CacheFailure' do |func_name|
     before { allow(redis_instance).to receive(func_name).and_raise(::Redis::BaseError) }
+
+    let(:redis_instance) { RateLimit.config.redis = Redis.new }
 
     context 'when fail_safe is true' do
       before { RateLimit.config.fail_safe = false }
@@ -22,6 +23,8 @@ RSpec.shared_examples_for RateLimit::Base do
     subject(:increment_counters) do
       described_class.increment_counters(**options)
     end
+
+    let(:options) { { topic: topic_login, value: value_five } }
 
     it_behaves_like 'CacheFailure', :multi
 
@@ -41,6 +44,8 @@ RSpec.shared_examples_for RateLimit::Base do
   describe '.reset_counters' do
     subject(:reset_counters) { described_class.reset_counters(**options) }
 
+    let(:options) { { topic: topic_login, value: value_five } }
+
     it_behaves_like 'CacheFailure', :multi
 
     context 'when topic attempts exceed limits' do
@@ -59,6 +64,8 @@ RSpec.shared_examples_for RateLimit::Base do
   describe '.limit_exceeded?' do
     subject(:limit_exceeded?) { described_class.limit_exceeded?(**options) }
 
+    let(:options) { { topic: topic_login, value: value_five } }
+
     it_behaves_like 'CacheFailure', :get
 
     context 'when topic attempts exceed limits' do
@@ -75,9 +82,11 @@ RSpec.shared_examples_for RateLimit::Base do
   describe '.throttle' do
     subject(:returned_object) { described_class.throttle(**options) }
 
+    let(:options) { { topic: topic_login, value: value_five, raise_errors: raise_errors } }
+
     it_behaves_like 'CacheFailure', :get
 
-    context 'when topic attempts did not exceed limits' do
+    context 'when attempts did not exceed limits' do
       before do
         allow(RateLimit::Window).to receive(:increment_cache_counter).with(any_args)
       end
@@ -88,16 +97,10 @@ RSpec.shared_examples_for RateLimit::Base do
         expect(RateLimit::Window).to have_received(:increment_cache_counter).once
       end
     end
-  end
 
-  describe '.throttle_with_block!' do
-    subject(:returned_object) { described_class.throttle_with_block!(**options) }
-
-    it_behaves_like 'CacheFailure', :get
-
-    context 'when topic attempts did not exceed limits' do
+    context 'when throttle with block attempts did not exceed limits' do
       subject(:throttle_with_block) do
-        described_class.throttle_with_block!(**options) do
+        described_class.throttle(**options) do
           Hash.new(0)
         end
       end
@@ -111,8 +114,10 @@ RSpec.shared_examples_for RateLimit::Base do
       end
     end
 
-    context 'when topic attempts exceeds limits' do
-      before { 2.times { described_class.throttle_with_block!(**options) { Hash.new(0) } } }
+    context 'when throttle with block attempts exceeds limits' do
+      before { 2.times { described_class.throttle(**options) { Hash.new(0) } } }
+
+      let(:raise_errors) { true }
 
       it 'returns false' do
         suppress(RateLimit::Errors::LimitExceededError) do
@@ -123,8 +128,8 @@ RSpec.shared_examples_for RateLimit::Base do
 
     context 'when nested throttles are called' do
       subject(:nested_throttle!) do
-        described_class.throttle_with_block!(**options) do
-          described_class.throttle_with_block!(topic: 'other_topic', value: 55) do
+        described_class.throttle(**options) do
+          described_class.throttle(topic: 'other_topic', value: 55) do
             Hash.new(1)
           end
         end
@@ -141,10 +146,12 @@ RSpec.shared_examples_for RateLimit::Base do
       end
 
       context 'when attempts exceeded limits' do
+        let(:raise_errors) { true }
+
         before do
           2.times do
-            described_class.throttle_with_block!(**options) do
-              described_class.throttle_with_block!(topic: 'other_topic', value: 55) do
+            described_class.throttle(**options) do
+              described_class.throttle(topic: 'other_topic', value: 55) do
                 []
               end
             end
@@ -178,8 +185,10 @@ RSpec.shared_examples_for RateLimit::Base do
     end
   end
 
-  describe '.throttle_only_failures_with_block!' do
-    subject(:throttle_only_failures_with_block!) { described_class.throttle_only_failures_with_block!(**options) }
+  describe '.throttle(only_failures)' do
+    subject(:throttle_only_failures_with_block) { described_class.throttle(**options) }
+
+    let(:options) { { topic: topic_login, value: value_five, only_failures: true } }
 
     it_behaves_like 'CacheFailure', :get
 
@@ -189,8 +198,8 @@ RSpec.shared_examples_for RateLimit::Base do
       end
 
       context 'when block is provided' do
-        subject(:throttle_only_failures_with_block!) do
-          described_class.throttle_only_failures_with_block!(**options) do
+        subject(:throttle_only_failures_with_block) do
+          described_class.throttle(**options) do
             Hash.new(0)
           end
         end
@@ -198,15 +207,15 @@ RSpec.shared_examples_for RateLimit::Base do
         before { allow(Hash).to receive(:new) }
 
         it 'calls yield' do
-          throttle_only_failures_with_block!
+          throttle_only_failures_with_block
 
           expect(Hash).to have_received(:new).once
         end
       end
 
       context 'when block is provided with exception' do
-        subject(:throttle_only_failures_with_block!) do
-          described_class.throttle_only_failures_with_block!(**options) do
+        subject(:throttle_only_failures_with_block) do
+          described_class.throttle(**options) do
             raise 'Error'
           end
         end
@@ -215,7 +224,7 @@ RSpec.shared_examples_for RateLimit::Base do
 
         it 'does not increment limit in cache' do
           suppress(StandardError) do
-            throttle_only_failures_with_block! { Hash.new(0) }
+            throttle_only_failures_with_block { Hash.new(0) }
           end
 
           expect(RateLimit::Window).to have_received(:increment_cache_counter).once

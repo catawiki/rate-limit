@@ -4,13 +4,15 @@ module RateLimit
   class Worker
     include Throttler
 
-    attr_accessor :topic, :value, :limits, :windows, :exceeded_window, :result
+    attr_accessor :topic, :value, :limits, :windows, :exceeded_window, :result, :raise_errors, :only_failures
 
-    def initialize(topic:, value:)
-      @topic     = topic.to_s
-      @value     = value.to_s
-      @windows   = Window.find_all(worker: self, topic: @topic)
-      @result    = Result.new(topic: @topic, value: @value)
+    def initialize(topic:, value:, raise_errors: false, only_failures: false)
+      @topic         = topic.to_s
+      @value         = value.to_s
+      @windows       = Window.find_all(worker: self, topic: @topic)
+      @result        = Result.new(topic: @topic, value: @value)
+      @raise_errors = raise_errors
+      @only_failures = only_failures
     end
 
     def increment_cache_counter
@@ -37,7 +39,7 @@ module RateLimit
       RateLimit.config.success_callback(result)
     end
 
-    def failure!(raise_errors: false)
+    def failure!
       result.failure!(self)
       RateLimit.config.failure_callback(result)
 
