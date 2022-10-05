@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/kernel'
-require 'rate_limit'
-require 'byebug'
 require 'simplecov'
 
-SimpleCov.start
+SimpleCov.start do
+  add_filter '/spec/'
+
+  enable_coverage :branch
+end
+
+require 'active_support/core_ext/kernel'
+require 'byebug'
+require 'rate_limit'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

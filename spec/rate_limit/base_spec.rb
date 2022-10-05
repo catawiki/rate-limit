@@ -172,11 +172,11 @@ RSpec.shared_examples_for RateLimit::Base do
           expect(Hash).not_to have_received(:new).with(any_args)
         end
 
-        it 'exceeded limit for atribute 1' do
+        it 'exceeded limit for attribute 1' do
           expect(described_class.limit_exceeded?(**options)).to be(true)
         end
 
-        it 'exceeded limit for atribute 2' do
+        it 'exceeded limit for attribute 2' do
           expect(
             described_class.limit_exceeded?(topic: topic_login, value: value_five)
           ).to be(true)

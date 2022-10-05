@@ -3,7 +3,7 @@
 module RateLimit
   module Throttler
     def throttle
-      return failure! if reloaded_limit_exceeded?
+      return failure! if limit_exceeded?
 
       yield if block_given?
 
