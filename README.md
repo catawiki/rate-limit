@@ -30,30 +30,30 @@ Or install it yourself as:
 
 ## Basic Usage
 
-### `RateLimit.throttle`
-Returns [RateLimit::Result](https://github.com/catawiki/rate-limit/wiki/RateLimit::Result) Object
+### [`RateLimit.throttle`](https://github.com/catawiki/rate-limit/wiki/Throttling)
+The throttle method expects the following options
 
+| Option           | Description                                                               | Examples                              |
+| ---------------- | ------------------------------------------------------------------------- | ------------------------------------- |
+| topic            | The topic name you would like to throttle, usually is the name of feature | "login", "send_sms", "redeem_voucher" |
+| value            | The identifier you would like to throttle the given topic by.             | user_id, phone_number, voucher_code   |
+
+
+The `throttle` method checks if the given value did exceed the defined limits for the given topic. If the limit is exceeded then it returns [RateLimit::Result](https://github.com/catawiki/rate-limit/wiki/RateLimit::Result) Object, where `result.success?` will be `false`. Otherwise, it increments the attempts counter in the cache and sets `result.success?` to `true`.
+
+#### Example
 ```ruby
-result = RateLimit.throttle(topic: :login, value: id)
+result = RateLimit.throttle(topic: :login, value: 123)
 
 if result.success?
   # Do something
 end
 ```
 
-### `RateLimit.throttle` with Block
 
-Raises error [RateLimit::Errors::LimitExceededError](https://github.com/catawiki/rate-limit/wiki/RateLimit::Errors::LimitExceededError) when limit is exceeded if `raise_errors: true` option is provided
-```ruby
-  RateLimit.throttle(topic: :send_sms, value: id, raise_errors: true) do
-    # Logic goes Here
-  end
-```
+Please check the [Wiki](https://github.com/catawiki/rate-limit/wiki) for advanced throttling and options.
 
-## Advanced Usage
-Please check the [Wiki](https://github.com/catawiki/rate-limit/wiki)
-
-## Config
+## [Configuration](https://github.com/catawiki/rate-limit/wiki/Configuration)
 
 Customize the configuration by adding the following block to `config/initializers/rate_limit.rb`
 
