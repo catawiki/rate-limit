@@ -33,10 +33,10 @@ Or install it yourself as:
 ### [`RateLimit.throttle`](https://github.com/catawiki/rate-limit/wiki/Throttling)
 The throttle method expects the following options
 
-| Option           | Description                                                               | Examples                              |
-| ---------------- | ------------------------------------------------------------------------- | ------------------------------------- |
-| topic            | The topic name you would like to throttle, usually is the name of feature | "login", "send_sms", "redeem_voucher" |
-| value            | The identifier you would like to throttle the given topic by.             | user_id, phone_number, voucher_code   |
+| Option           | Description                                                                     | Examples                              |
+| ---------------- | ------------------------------------------------------------------------------- | ------------------------------------- |
+| topic            | The topic you would like to throttle                                            | "login", "send_sms", "redeem_voucher" |
+| value            | The identifier of the unique entity that is throttled based on the topic limits | user_id, phone_number, voucher_code   |
 
 
 The `throttle` method checks if the given value did exceed the defined limits for the given topic. If the limit is exceeded then it returns [RateLimit::Result](https://github.com/catawiki/rate-limit/wiki/RateLimit::Result) Object, where `result.success?` will be `false`. Otherwise, it increments the attempts counter in the cache and sets `result.success?` to `true`.
