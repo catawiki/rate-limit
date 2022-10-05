@@ -25,11 +25,8 @@ and this project adheres to [Semantic Versioning].
 - removed `RateLimit::Worker#namespace`
 - removed `RateLimit::Errors::LimitExceededError#namespace`
 - removed `RateLimit::Errors::LimitExceededError#worker`
-
-### Deprecated
-
-- `RateLimit.throttle_with_block!` and `Worker#throttle_with_block!` in favour of `.throttle` with `{ raise_errors: true }` option
-- `RateLimit.throttle_only_failures_with_block!` and `Worker#throttle_only_failures_with_block!` in favour of `.throttle` with `{ only_failures: true }` option
+- removed `RateLimit.throttle_with_block!` and `Worker#throttle_with_block!` in favour of `.throttle` with `{ raise_errors: true }` option
+- removed `RateLimit.throttle_only_failures_with_block!` and `Worker#throttle_only_failures_with_block!` in favour of `.throttle` with `{ only_failures: true }` option
 
 
 ### Fixed
