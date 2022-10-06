@@ -5,20 +5,6 @@ RSpec.shared_examples_for RateLimit::Base do
   let(:value_five) { 5 }
   let(:raise_errors) { false }
 
-  shared_examples_for 'CacheFailure' do |func_name|
-    before { allow(redis_instance).to receive(func_name).and_raise(::Redis::BaseError) }
-
-    let(:redis_instance) { RateLimit.config.redis = Redis.new }
-
-    context 'when fail_safe is true' do
-      before { RateLimit.config.fail_safe = false }
-
-      after { RateLimit.config.fail_safe = true }
-
-      it { expect { subject }.to raise_error(::Redis::BaseError) }
-    end
-  end
-
   describe '.increment_counters' do
     subject(:increment_counters) do
       described_class.increment_counters(**options)
