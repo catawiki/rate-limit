@@ -33,8 +33,8 @@ module RateLimit
       exceeded_window.present?
     end
 
-    def success!
-      increment_cache_counter
+    def success!(skip_increment_cache: false)
+      increment_cache_counter unless skip_increment_cache
       result.success!
       RateLimit.config.success_callback(result)
     end

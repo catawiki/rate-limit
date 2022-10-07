@@ -10,7 +10,7 @@ RSpec.shared_examples_for 'callback success' do |count|
   after { RateLimit.config.on_success = nil }
 
   it do
-    suppress(RateLimit::Test::YeildError) { result }
+    suppress(StandardError) { result }
 
     expect(RateLimit::Test::CallbackHelper).to have_received(:success).exactly(count).times
   end
@@ -26,7 +26,7 @@ RSpec.shared_examples_for 'callback failure' do |count|
   after { RateLimit.config.on_failure = nil }
 
   it do
-    suppress(RateLimit::Test::YeildError) { result }
+    suppress(StandardError) { result }
 
     expect(RateLimit::Test::CallbackHelper).to have_received(:failure).exactly(count).times
   end

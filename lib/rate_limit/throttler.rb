@@ -7,7 +7,7 @@ module RateLimit
 
       yield if block_given?
 
-      return success! unless only_failures
+      success!(skip_increment_cache: only_failures)
     rescue StandardError => e
       success! unless e.is_a?(Errors::LimitExceededError)
       raise e

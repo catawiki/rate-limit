@@ -14,7 +14,7 @@ RSpec.shared_examples_for 'does not call yield' do
   before { allow(RateLimit::Test::YeildHelper).to receive(:perform).with(any_args).and_call_original }
 
   it do
-    subject
+    suppress(RateLimit::Errors::LimitExceededError) { result }
 
     expect(RateLimit::Test::YeildHelper).not_to have_received(:perform)
   end
