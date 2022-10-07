@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples_for 'CacheFailure' do |func_name|
+RSpec.shared_examples_for 'CacheFailure' do |func_name|
   before { allow(redis_instance).to receive(func_name).and_raise(::Redis::BaseError) }
 
   let(:redis_instance) { RateLimit.config.redis = Redis.new }

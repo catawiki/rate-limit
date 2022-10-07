@@ -21,5 +21,9 @@ RSpec/NestedGroups:
 RSpec/MultipleMemoizedHelpers:
   Max: 6
 
+RSpec/DescribeClass:
+  Exclude:
+    - spec/integration/**/*_spec.rb
+
 Naming/FileName:
   Exclude: ['lib/rate-limit.rb']
