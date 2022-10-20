@@ -5,7 +5,7 @@ RSpec.shared_examples_for 'CacheFailure' do |func_name|
 
   let(:redis_instance) { RateLimit.config.redis = Redis.new }
 
-  context 'when fail_safe is true' do
+  context 'when fail_safe is disabled' do
     before { RateLimit.config.fail_safe = false }
 
     after { RateLimit.config.fail_safe = true }
