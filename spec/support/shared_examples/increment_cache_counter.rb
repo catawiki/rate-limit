@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples_for 'increments cache counter' do |count|
+RSpec.shared_examples_for 'a throttler increments cache counter' do |count|
   before do
     allow(RateLimit::Window).to receive(:increment_cache_counter).with(any_args).and_call_original
   end

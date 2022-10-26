@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples_for 'callback success' do |count|
+RSpec.shared_examples_for 'a callback success called' do |count|
   before do
     allow(RateLimit::Test::CallbackHelper).to receive(:success).with(kind_of(RateLimit::Result)).and_call_original
 
@@ -16,7 +16,7 @@ RSpec.shared_examples_for 'callback success' do |count|
   end
 end
 
-RSpec.shared_examples_for 'callback failure' do |count|
+RSpec.shared_examples_for 'a callback failure called' do |count|
   before do
     allow(RateLimit::Test::CallbackHelper).to receive(:failure).with(kind_of(RateLimit::Result)).and_call_original
 

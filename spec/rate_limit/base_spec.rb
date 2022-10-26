@@ -12,7 +12,7 @@ RSpec.shared_examples_for RateLimit::Base do
 
     let(:options) { { topic: topic_login, value: value_five } }
 
-    it_behaves_like 'CacheFailure', :multi
+    it_behaves_like 'a Cache raises Error', :multi
 
     context 'when topic attempts exceed limits' do
       before { described_class.throttle(**options) }
@@ -32,7 +32,7 @@ RSpec.shared_examples_for RateLimit::Base do
 
     let(:options) { { topic: topic_login, value: value_five } }
 
-    it_behaves_like 'CacheFailure', :multi
+    it_behaves_like 'a Cache raises Error', :multi
 
     context 'when topic attempts exceed limits' do
       before { described_class.throttle(**options) }
@@ -52,7 +52,7 @@ RSpec.shared_examples_for RateLimit::Base do
 
     let(:options) { { topic: topic_login, value: value_five } }
 
-    it_behaves_like 'CacheFailure', :get
+    it_behaves_like 'a Cache raises Error', :get
 
     context 'when topic attempts exceed limits' do
       before { 3.times { described_class.throttle(**options) } }
@@ -70,7 +70,7 @@ RSpec.shared_examples_for RateLimit::Base do
 
     let(:options) { { topic: topic_login, value: value_five, raise_errors: raise_errors } }
 
-    it_behaves_like 'CacheFailure', :get
+    it_behaves_like 'a Cache raises Error', :get
 
     context 'when attempts did not exceed limits' do
       before do
@@ -93,7 +93,7 @@ RSpec.shared_examples_for RateLimit::Base do
 
       before { allow(Hash).to receive(:new).with(any_args) }
 
-      it 'calls yield' do
+      it 'a yield called' do
         throttle_with_block
 
         expect(Hash).to have_received(:new).with(0).once
@@ -124,7 +124,7 @@ RSpec.shared_examples_for RateLimit::Base do
       before { allow(Hash).to receive(:new) }
 
       context 'when attempts did not exceed limits' do
-        it 'calls yield' do
+        it 'a yield called' do
           nested_throttle!
 
           expect(Hash).to have_received(:new).once
@@ -176,7 +176,7 @@ RSpec.shared_examples_for RateLimit::Base do
 
     let(:options) { { topic: topic_login, value: value_five, only_failures: true } }
 
-    it_behaves_like 'CacheFailure', :get
+    it_behaves_like 'a Cache raises Error', :get
 
     context 'when topic attempts did not exceed limits' do
       before do
@@ -192,7 +192,7 @@ RSpec.shared_examples_for RateLimit::Base do
 
         before { allow(Hash).to receive(:new) }
 
-        it 'calls yield' do
+        it 'a yield called' do
           throttle_only_failures_with_block
 
           expect(Hash).to have_received(:new).once

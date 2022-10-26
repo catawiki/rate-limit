@@ -12,21 +12,21 @@ RSpec.describe 'Block Throttle with Default Options', type: :integration do
 
   let(:default_options) { { topic: topic_login, value: value_five } }
 
-  it_behaves_like 'CacheFailure', :get
+  it_behaves_like 'a Cache raises Error', :get
 
   context 'when attempts did not exceed limits' do
-    it_behaves_like 'increments cache counter', 1
-    it_behaves_like 'result success'
-    it_behaves_like 'calls yield'
-    it_behaves_like 'callback success', 1
+    it_behaves_like 'a throttler increments cache counter', 1
+    it_behaves_like 'a result succeeded'
+    it_behaves_like 'a yield called'
+    it_behaves_like 'a callback success called', 1
   end
 
   context 'when throttle attempts exceeds limits' do
     before { 2.times { RateLimit.throttle(**default_options) } }
 
-    it_behaves_like 'increments cache counter', 0
-    it_behaves_like 'result failure'
-    it_behaves_like 'does not call yield'
-    it_behaves_like 'callback failure', 1
+    it_behaves_like 'a throttler increments cache counter', 0
+    it_behaves_like 'a result failed'
+    it_behaves_like 'a yield not called'
+    it_behaves_like 'a callback failure called', 1
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples_for 'calls yield' do
+RSpec.shared_examples_for 'a yield called' do
   before { allow(RateLimit::Test::YeildHelper).to receive(:perform).with(any_args).and_call_original }
 
   it do
@@ -10,7 +10,7 @@ RSpec.shared_examples_for 'calls yield' do
   end
 end
 
-RSpec.shared_examples_for 'does not call yield' do
+RSpec.shared_examples_for 'a yield not called' do
   before { allow(RateLimit::Test::YeildHelper).to receive(:perform).with(any_args).and_call_original }
 
   it do
@@ -20,7 +20,7 @@ RSpec.shared_examples_for 'does not call yield' do
   end
 end
 
-RSpec.shared_examples_for 'raises yeild error' do
+RSpec.shared_examples_for 'a yield raises error' do
   before { allow(RateLimit::Test::YeildHelper).to receive(:perform).with(any_args).and_call_original }
 
   it do
