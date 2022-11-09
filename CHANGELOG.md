@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v0.2.1] - 2022-11-09
+
+### Added
+
+- https://github.com/catawiki/rate-limit/pull/28 added Integration Tests
+
+### Fixed
+
+- https://github.com/catawiki/rate-limit/issues/29 Calling throttle with only_failures: true does not call success callback
+
+
 ## [v0.2.0] - 2022-10-05
 
 ### Added
@@ -65,6 +76,7 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/catawiki/rate-limit/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/catawiki/rate-limit/compare/v0.2.1...HEAD
+[v0.2.1]: https://github.com/catawiki/rate-limit/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.com/catawiki/rate-limit/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/catawiki/rate-limit/compare/v0.0.1...v0.1.0
