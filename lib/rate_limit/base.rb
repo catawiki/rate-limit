@@ -9,7 +9,7 @@ module RateLimit
     end
 
     def limit_exceeded?(**args)
-      Worker.new(**args).reloaded_limit_exceeded?
+      Worker.new(**args).limit_exceeded?
     end
 
     def reset_counters(**args)

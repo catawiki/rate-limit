@@ -4,7 +4,8 @@ module RateLimit
   class Worker
     include Throttler
 
-    attr_accessor :topic, :value, :limits, :windows, :exceeded_window, :result, :raise_errors, :only_failures
+    attr_accessor :topic, :value, :limits, :windows, :result, :raise_errors, :only_failures,
+                  :exceeded_window, :exceeded_window_expires_at
 
     def initialize(topic:, value:, raise_errors: false, only_failures: false)
       @topic         = topic.to_s
@@ -23,13 +24,9 @@ module RateLimit
       Window.clear_cache_counter(windows)
     end
 
-    def reloaded_limit_exceeded?
-      @exceeded_window = Window.find_exceeded(windows)
-
-      limit_exceeded?
-    end
-
     def limit_exceeded?
+      reload_limit_exceeded if exceeded_window.nil? || exceeded_window_expires_at >= Time.now
+
       exceeded_window.present?
     end
 
@@ -44,6 +41,16 @@ module RateLimit
       RateLimit.config.failure_callback(result)
 
       raise Errors::LimitExceededError, result if raise_errors
+    end
+
+    private
+
+    def reload_limit_exceeded
+      @exceeded_window = Window.find_exceeded(windows)
+      @exceeded_window_expires_at = nil
+      return if @exceeded_window.nil?
+
+      @exceeded_window_expires_at = Time.now + @exceeded_window.interval
     end
   end
 end
