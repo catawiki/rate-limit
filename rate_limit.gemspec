@@ -5,7 +5,7 @@ require_relative 'lib/rate_limit/version'
 Gem::Specification.new do |spec|
   spec.name          = 'rate-limit'
   spec.version       = RateLimit::VERSION
-  spec.authors       = ['Mohamed Motaweh']
+  spec.authors       = ['Catawiki', 'Mohamed Motaweh']
   spec.email         = ['opensource@catawiki.nl']
 
   spec.summary       = 'A Rate Limiting Gem'
