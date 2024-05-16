@@ -13,8 +13,7 @@ module RateLimit
       class << self
         def raw_limits
           {
-            RateLimit.config.default_threshold => \
-              RateLimit.config.default_interval
+            RateLimit.config.default_threshold => RateLimit.config.default_interval
           }
         end
       end
