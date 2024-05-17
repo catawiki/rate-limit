@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples_for 'a Cache raises Error' do |func_name|
-  before { allow(redis_instance).to receive(func_name).and_raise(::Redis::BaseError) }
+  before { allow(redis_instance).to receive(func_name).and_raise(Redis::BaseError) }
 
   let(:redis_instance) { RateLimit.config.redis = Redis.new }
 
@@ -10,6 +10,6 @@ RSpec.shared_examples_for 'a Cache raises Error' do |func_name|
 
     after { RateLimit.config.fail_safe = true }
 
-    it { expect { subject }.to raise_error(::Redis::BaseError) }
+    it { expect { subject }.to raise_error(Redis::BaseError) }
   end
 end
