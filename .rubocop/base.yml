@@ -5,8 +5,6 @@ require:
 AllCops:
   NewCops: enable
   TargetRubyVersion: 2.7
-  Exclude:
-    - 'CODEOWNERS'
 
 Layout/LineLength:
   Max: 120
@@ -28,4 +26,4 @@ RSpec/DescribeClass:
     - spec/integration/**/*_spec.rb
 
 Naming/FileName:
-  Exclude: ['lib/rate-limit.rb']
+  Exclude: ['lib/rate-limit.rb', 'CODEOWNERS']
