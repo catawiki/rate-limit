@@ -5,6 +5,8 @@ require:
 AllCops:
   NewCops: enable
   TargetRubyVersion: 2.7
+  Exclude:
+    - 'CODEOWNERS'
 
 Layout/LineLength:
   Max: 120
