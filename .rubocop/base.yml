@@ -26,4 +26,4 @@ RSpec/DescribeClass:
     - spec/integration/**/*_spec.rb
 
 Naming/FileName:
-  Exclude: ['lib/rate-limit.rb']
+  Exclude: ['lib/rate-limit.rb', 'CODEOWNERS']

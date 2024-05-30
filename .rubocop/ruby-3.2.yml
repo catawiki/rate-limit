@@ -12,3 +12,6 @@ Naming/BlockForwarding:
 
 Style/HashSyntax:
   Enabled: false
+
+Style/ArgumentsForwarding:
+  Enabled: false
