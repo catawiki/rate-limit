@@ -1,8 +1,0 @@
-inherit_from:
-  - base.yml
-
-AllCops:
-  TargetRubyVersion: 2.7
-
-Lint/NonDeterministicRequireOrder:
-  Enabled: false
