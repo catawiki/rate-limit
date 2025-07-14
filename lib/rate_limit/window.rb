@@ -17,7 +17,7 @@ module RateLimit
     end
 
     def cached_counter
-      Cache.read(key).to_i || 0
+      (Cache.read(key) || 0).to_i
     end
 
     class << self
