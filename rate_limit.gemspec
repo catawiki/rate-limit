@@ -24,6 +24,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'activesupport', '>= 5.2', '< 8.1'
-  spec.add_dependency 'redis', '>= 3.0.0', '<= 5.4.0'
+  spec.add_dependency 'redis', '>= 3.0.0', '<= 5.5.0'
   spec.metadata['rubygems_mfa_required'] = 'true'
 end
