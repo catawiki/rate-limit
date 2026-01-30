@@ -1,2 +1,32 @@
-inherit_from:
-  - .rubocop/ruby-3.1.yml
+plugins:
+  - rubocop-performance
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2
+
+Layout/LineLength:
+  Max: 120
+
+Style/Documentation:
+  Enabled: false
+
+Style/ArgumentsForwarding:
+  UseAnonymousForwarding: false
+
+Metrics/BlockLength:
+  AllowedMethods: ["describe", "context"]
+
+RSpec/NestedGroups:
+  Max: 10
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 6
+
+RSpec/DescribeClass:
+  Exclude:
+    - spec/integration/**/*_spec.rb
+
+Naming/FileName:
+  Exclude: ["lib/rate-limit.rb", "CODEOWNERS"]
