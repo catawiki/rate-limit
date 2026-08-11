@@ -8,10 +8,10 @@ gemspec
 gem 'rake', '~> 13.0'
 
 group :development, :test do
-  gem 'byebug'
+  gem 'debug'
   gem 'rspec', '~> 3.11'
-  gem 'rubocop', '~> 1.31'
-  gem 'rubocop-performance'
-  gem 'rubocop-rspec'
+  gem 'rubocop', '1.89.0'
+  gem 'rubocop-performance', '1.26.1'
+  gem 'rubocop-rspec', '3.10.2'
   gem 'simplecov', require: false
 end

@@ -31,7 +31,7 @@ module RateLimit
 
       def increment_cache_counter(windows)
         Cache.write(
-          windows.each_with_object({}) { |w, h| h[w.key] = w.interval }
+          windows.to_h { |w| [w.key, w.interval] }
         )
       end
 
