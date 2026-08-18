@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'A Rate Limiting Gem'
   spec.license       = 'MIT'
-  spec.required_ruby_version = '>= 3.1'
+  spec.required_ruby_version = '>= 3.3'
 
   spec.homepage = 'https://github.com/catawiki/rate-limit'
 
@@ -24,6 +24,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'activesupport', '>= 5.2', '< 8.2'
-  spec.add_dependency 'redis', '>= 3.0.0', '<= 5.5.0'
+  spec.add_dependency 'redis', '>= 3.0.0', '<= 6.1.0'
   spec.metadata['rubygems_mfa_required'] = 'true'
 end

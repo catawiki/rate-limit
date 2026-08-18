@@ -2,7 +2,6 @@
 
 require 'active_support/core_ext/kernel'
 require 'rate_limit'
-require 'byebug'
 require 'simplecov'
 
 SimpleCov.start
